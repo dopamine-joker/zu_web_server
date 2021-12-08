@@ -1,19 +1,31 @@
 package router
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
+
+	"zu_web_server/handler"
+	"zu_web_server/misc"
 )
 
 func Register() *gin.Engine {
 	r := gin.Default()
 	r.Use(CorsMiddleware(), gin.Recovery())
 	r.NoRoute(NoRouteFunc)
+	initUserRouter(r)
 	return r
 }
 
+func initUserRouter(r *gin.Engine) {
+	handler.UserList = make(map[string]string)
+	userGroup := r.Group("/user")
+	userGroup.POST("/login", handler.Login)
+	userGroup.POST("/register", handler.Register)
+}
+
 func NoRouteFunc(r *gin.Context) {
-	FailWithMsg(r, "please check request url")
+	misc.FailWithMsg(r, "please check request url")
 }
 
 func CorsMiddleware() gin.HandlerFunc {

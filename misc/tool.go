@@ -1,9 +1,14 @@
-package router
+package misc
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
+
+func SuccessWithMsg(c *gin.Context, msg interface{}, data interface{}) {
+	ResponseWithCode(c, CodeSuccess, msg, data)
+}
 
 func FailWithMsg(c *gin.Context, msg interface{}) {
 	ResponseWithCode(c, CodeFail, msg, nil)

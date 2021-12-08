@@ -1,9 +1,9 @@
 package misc
 
 type Config struct {
-	Api ApiConfig `mapstruct:"api"`
+	Api ApiConfig `mapstructure:"api"`
 }
 
 type ApiConfig struct {
-	ListenPort int `mapstruct:"listenPort"`
+	ListenPort int `mapstructure:"listenPort"`
 }

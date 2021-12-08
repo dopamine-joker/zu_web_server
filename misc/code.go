@@ -1,4 +1,4 @@
-package router
+package misc
 
 // 自定义错误码
 const (

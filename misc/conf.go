@@ -8,7 +8,7 @@ func Init() {
 	var err error
 	viper.SetConfigType("toml")
 	viper.SetConfigName("config")
-	viper.AddConfigPath("../config")
+	viper.AddConfigPath("./config")
 	initLogger()
 	if err = viper.ReadInConfig(); err != nil {
 		panic(err)
