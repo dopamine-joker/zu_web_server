@@ -9,8 +9,9 @@ import (
 	"os/signal"
 	"syscall"
 
-	"zu_web_server/misc"
-	"zu_web_server/router"
+	"github.com/dopamine-joker/zu_web_server/api/router"
+	"github.com/dopamine-joker/zu_web_server/api/rpc"
+	"github.com/dopamine-joker/zu_web_server/misc"
 )
 
 func main() {
@@ -18,8 +19,10 @@ func main() {
 	defer stop()
 
 	misc.Init()
+	rpc.InitLogicRpcClient()
 	r := router.Register()
 	port := misc.Conf.Api.ListenPort
+
 	srv := &http.Server{
 		Addr:    fmt.Sprintf(":%d", port),
 		Handler: r,

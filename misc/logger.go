@@ -10,7 +10,7 @@ var Logger *zap.Logger
 
 func initLogger() {
 	hook := &lumberjack.Logger{
-		Filename: "../log/web_server",
+		Filename: "./log/web_server",
 		MaxSize:  128,
 		Compress: true,
 	}
