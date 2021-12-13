@@ -1,14 +1,15 @@
 package handle
 
 import (
-	"github.com/dopamine-joker/zu_web_server/api/rpc"
-	"github.com/dopamine-joker/zu_web_server/misc"
-	"github.com/dopamine-joker/zu_web_server/proto"
-	"github.com/dopamine-joker/zu_web_server/utils"
 	"log"
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
+
+	"github.com/dopamine-joker/zu_web_server/api/rpc"
+	"github.com/dopamine-joker/zu_web_server/misc"
+	"github.com/dopamine-joker/zu_web_server/proto"
+	"github.com/dopamine-joker/zu_web_server/utils"
 )
 
 func Login(c *gin.Context) {
@@ -29,7 +30,7 @@ func Login(c *gin.Context) {
 	code, token, user, err := rpc.Login(c.Request.Context(), req)
 	if code == misc.CodeFail || err != nil {
 		misc.Logger.Error("rpc login err", zap.Error(err))
-		utils.FailWithMsg(c, err.Error())
+		utils.FailWithMsg(c, utils.GetRpcMsg(err.Error()))
 		return
 	}
 	misc.Logger.Info("login success", zap.String("email", loginForm.Email), zap.String("token", token))
@@ -59,7 +60,7 @@ func TokenLogin(c *gin.Context) {
 	code, token, user, err := rpc.TokenLogin(c.Request.Context(), req)
 	if code == misc.CodeFail || token == "" || err != nil {
 		misc.Logger.Error("rpc tokenLogin err", zap.Error(err))
-		utils.FailWithMsg(c, err.Error())
+		utils.FailWithMsg(c, utils.GetRpcMsg(err.Error()))
 		return
 	}
 
@@ -93,7 +94,7 @@ func Register(c *gin.Context) {
 	code, err := rpc.Register(c.Request.Context(), req)
 	if code == misc.CodeFail || err != nil {
 		misc.Logger.Error("rpc register err", zap.Error(err))
-		utils.FailWithMsg(c, err.Error())
+		utils.FailWithMsg(c, utils.GetRpcMsg(err.Error()))
 		return
 	}
 
@@ -121,7 +122,7 @@ func Logout(c *gin.Context) {
 	code, err := rpc.Logout(c.Request.Context(), req)
 	if code == misc.CodeFail || err != nil {
 		misc.Logger.Error("rpc logout err", zap.Error(err))
-		utils.FailWithMsg(c, err.Error())
+		utils.FailWithMsg(c, utils.GetRpcMsg(err.Error()))
 		return
 	}
 

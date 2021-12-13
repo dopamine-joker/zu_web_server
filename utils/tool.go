@@ -1,11 +1,13 @@
 package utils
 
 import (
-	"github.com/dopamine-joker/zu_web_server/misc"
-	"google.golang.org/grpc/resolver"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
+	"google.golang.org/grpc/resolver"
+
+	"github.com/dopamine-joker/zu_web_server/misc"
 )
 
 func SuccessWithMsg(c *gin.Context, msg interface{}, data interface{}) {
@@ -29,6 +31,15 @@ func ResponseWithCode(c *gin.Context, msgCode int, msg interface{}, data interfa
 		"message": msg,
 		"data":    data,
 	})
+}
+
+//GetRpcMsg 提取rpc调用的错误信息
+func GetRpcMsg(errMsg string) string {
+	sli := strings.Split(errMsg, "desc = ")
+	if len(sli) < 1 {
+		return ""
+	}
+	return sli[1]
 }
 
 // Remove helper function
