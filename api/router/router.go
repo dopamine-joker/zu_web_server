@@ -11,6 +11,7 @@ func Register() *gin.Engine {
 	r.Use(CorsMiddleware(), UserAuthMiddleware(), gin.Recovery())
 	r.NoRoute(NoRouteFunc)
 	initUserRouter(r)
+	initGoodsRouter(r)
 	return r
 }
 
@@ -20,6 +21,11 @@ func initUserRouter(r *gin.Engine) {
 	userGroup.POST("/register", handle.Register)
 	userGroup.POST("/tokenLogin", handle.TokenLogin)
 	userGroup.POST("/logout", handle.Logout)
+}
+
+func initGoodsRouter(r *gin.Engine) {
+	goodsGroup := r.Group("/goods")
+	goodsGroup.POST("/upload", handle.Upload)
 }
 
 func NoRouteFunc(r *gin.Context) {

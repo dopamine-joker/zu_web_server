@@ -85,3 +85,13 @@ func Logout(ctx context.Context, req *proto.LogoutRequest) (code int32, err erro
 	code = response.GetCode()
 	return
 }
+
+//UploadPic 上传文件,文件以byte数组形式上传
+func UploadPic(ctx context.Context, req *proto.UploadRequest) (code int32, err error) {
+	response, err := LogicRpcClient.UploadPic(ctx, req)
+	if err != nil {
+		return
+	}
+	code = response.GetCode()
+	return
+}
