@@ -21,11 +21,14 @@ func initUserRouter(r *gin.Engine) {
 	userGroup.POST("/register", handle.Register)
 	userGroup.POST("/tokenLogin", handle.TokenLogin)
 	userGroup.POST("/logout", handle.Logout)
+	userGroup.POST("/getSig", handle.GetSig)
 }
 
 func initGoodsRouter(r *gin.Engine) {
 	goodsGroup := r.Group("/goods")
 	goodsGroup.POST("/upload", handle.Upload)
+	goodsGroup.POST("/getGoods", handle.GetGoods)
+	goodsGroup.POST("/goodsDetail", handle.GetGoodsDetail)
 }
 
 func NoRouteFunc(r *gin.Context) {

@@ -1,8 +1,13 @@
 package misc
 
-import "github.com/spf13/viper"
+import (
+	"github.com/spf13/viper"
+)
 
-var Conf Config
+var (
+	Conf Config
+	Key  string
+)
 
 func Init() {
 	var err error

@@ -1,10 +1,9 @@
 package handle
 
 import (
-	"log"
-
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
+	"log"
 
 	"github.com/dopamine-joker/zu_web_server/api/rpc"
 	"github.com/dopamine-joker/zu_web_server/misc"
@@ -129,5 +128,28 @@ func Logout(c *gin.Context) {
 	misc.Logger.Info("logout success", zap.String("token", logoutForm.Token))
 
 	utils.SuccessWithMsg(c, "logout success", nil)
+}
 
+//GetSig 获取sdk初始化的签名
+func GetSig(c *gin.Context) {
+	var getSigForm GetSigForm
+	var err error
+	if err = c.ShouldBindJSON(&getSigForm); err != nil {
+		misc.Logger.Error("handle getsig bind json err", zap.String("err", err.Error()))
+		utils.FailWithMsg(c, err.Error())
+		return
+	}
+
+	code, sig, err := rpc.GetSig(c.Request.Context(), getSigForm.UserId, getSigForm.SdkAppId, getSigForm.Expire)
+	if code == misc.CodeFail || err != nil {
+		misc.Logger.Error("rpc getSIg err", zap.Error(err))
+		utils.FailWithMsg(c, "获取签名失败")
+		return
+	}
+
+	dataMap := map[string]interface{}{
+		"sig": sig,
+	}
+
+	utils.SuccessWithMsg(c, "getSig success", dataMap)
 }

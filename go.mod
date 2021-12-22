@@ -6,6 +6,7 @@ require (
 	github.com/gin-gonic/gin v1.7.7
 	github.com/mitchellh/mapstructure v1.4.2
 	github.com/spf13/viper v1.9.0
+	github.com/tencentyun/tls-sig-api-v2-golang v1.2.0
 	go.etcd.io/etcd/api/v3 v3.5.1
 	go.etcd.io/etcd/client/v3 v3.5.1
 	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.27.0
