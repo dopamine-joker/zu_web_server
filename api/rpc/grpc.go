@@ -78,6 +78,15 @@ func TokenLogin(ctx context.Context, req *proto.TokenLoginRequest) (code int32, 
 	return
 }
 
+func UpdateUser(ctx context.Context, req *proto.UpdateUserRequest) (code int32, err error) {
+	response, err := LogicRpcClient.UpdateUser(ctx, req)
+	if err != nil {
+		return misc.CodeFail, err
+	}
+	code = response.Code
+	return
+}
+
 func Logout(ctx context.Context, req *proto.LogoutRequest) (code int32, err error) {
 	response, err := LogicRpcClient.Logout(ctx, req)
 	if err != nil {
@@ -94,6 +103,17 @@ func GetSig(ctx context.Context, userId string, sdkAppId, expire int) (code int3
 		return misc.CodeFail, "", err
 	}
 	code = misc.CodeSuccess
+	return
+}
+
+//UploadFace 上传头像
+func UploadFace(ctx context.Context, req *proto.UploadFaceRequest) (code int32, path string, err error) {
+	response, err := LogicRpcClient.UploadFace(ctx, req)
+	if err != nil {
+		return misc.CodeFail, "", err
+	}
+	code = response.Code
+	path = response.Path
 	return
 }
 
@@ -118,6 +138,17 @@ func GetGoods(ctx context.Context, req *proto.GetGoodsRequest) (code int32, good
 	return
 }
 
+//GetUserGoods 获取用户具体物品
+func GetUserGoods(ctx context.Context, req *proto.GetUserGoodsListRequest) (code int32, goodsList []*proto.GoodsDetail, err error) {
+	response, err := LogicRpcClient.UserGoods(ctx, req)
+	if err != nil {
+		return misc.CodeFail, nil, err
+	}
+	code = response.Code
+	goodsList = response.List
+	return
+}
+
 //PicList 根据商品id获取对应图片
 func PicList(ctx context.Context, req *proto.GetGoodsDetailRequest) (code int32, goodsDetail *proto.GoodsDetail, picList []*proto.Pic, err error) {
 	response, err := LogicRpcClient.GetGoodsPic(ctx, req)
@@ -127,5 +158,69 @@ func PicList(ctx context.Context, req *proto.GetGoodsDetailRequest) (code int32,
 	code = response.Code
 	goodsDetail = response.GetGoods()
 	picList = response.PicList
+	return
+}
+
+//SearchGoods 搜索物品
+func SearchGoods(ctx context.Context, req *proto.SearchGoodsRequest) (code int32, goodsList []*proto.GoodsDetail, err error) {
+	response, err := LogicRpcClient.SearchGoods(ctx, req)
+	if err != nil {
+		return misc.CodeFail, nil, err
+	}
+	code = response.Code
+	goodsList = response.List
+	return
+}
+
+//DeleteGoods 删除物品
+func DeleteGoods(ctx context.Context, req *proto.DeleteGoodsRequest) (code int32, err error) {
+	response, err := LogicRpcClient.DeleteGoods(ctx, req)
+	if err != nil {
+		return misc.CodeFail, err
+	}
+	code = response.Code
+	return
+}
+
+//AddOrder 增加订单
+func AddOrder(ctx context.Context, req *proto.AddOrderRequest) (code int32, oid int32, err error) {
+	response, err := LogicRpcClient.AddOrder(ctx, req)
+	if err != nil {
+		return misc.CodeFail, -1, err
+	}
+	code = response.Code
+	oid = response.Oid
+	return
+}
+
+//GetBuyOrder 获得购买订单
+func GetBuyOrder(ctx context.Context, req *proto.GetBuyOrderRequest) (code int32, orderList []*proto.Order, err error) {
+	response, err := LogicRpcClient.GetBuyOrder(ctx, req)
+	if err != nil {
+		return misc.CodeFail, nil, err
+	}
+	code = response.Code
+	orderList = response.OrderList
+	return
+}
+
+//GetSellOrder 获得出售订单
+func GetSellOrder(ctx context.Context, req *proto.GetSellOrderRequest) (code int32, orderList []*proto.Order, err error) {
+	response, err := LogicRpcClient.GetSellOrder(ctx, req)
+	if err != nil {
+		return misc.CodeFail, nil, err
+	}
+	code = response.Code
+	orderList = response.OrderList
+	return
+}
+
+//UpdateOrder 更新订单状态
+func UpdateOrder(ctx context.Context, req *proto.UpdateOrderRequest) (code int32, err error) {
+	response, err := LogicRpcClient.UpdateOrder(ctx, req)
+	if err != nil {
+		return misc.CodeFail, err
+	}
+	code = response.Code
 	return
 }

@@ -160,6 +160,49 @@ func GetGoods(c *gin.Context) {
 	utils.SuccessWithMsg(c, "get goods list success", res)
 }
 
+func GetUserGoodsList(c *gin.Context) {
+	var form UserGoodsListForm
+	var err error
+	if err = c.ShouldBindJSON(&form); err != nil {
+		misc.Logger.Error("handle get user goods bind json err", zap.String("err", err.Error()))
+		utils.FailWithMsg(c, "参数错误")
+		return
+	}
+
+	req := &proto.GetUserGoodsListRequest{
+		Uid: form.Uid,
+	}
+
+	code, list, err := rpc.GetUserGoods(c.Request.Context(), req)
+	if err != nil || code == misc.CodeFail {
+		misc.Logger.Error("rpc getusergoods err", zap.Error(err))
+		utils.FailWithMsg(c, "拉取物品列表失败")
+		return
+	}
+
+	var dataList []map[string]interface{}
+
+	for _, g := range list {
+		dataList = append(dataList, map[string]interface{}{
+			"gid":         g.Gid,
+			"uid":         g.Uid,
+			"name":        g.Name,
+			"uname":       g.Uname,
+			"price":       g.Price,
+			"detail":      g.Detail,
+			"cover":       g.Cover,
+			"create_time": g.CreateTime,
+		})
+	}
+
+	dataMap := map[string]interface{}{
+		"data": dataList,
+		"len":  len(dataList),
+	}
+
+	utils.SuccessWithMsg(c, "get user goods success", dataMap)
+}
+
 func GetGoodsDetail(c *gin.Context) {
 	var picListForm PicListForm
 	var err error
@@ -190,21 +233,91 @@ func GetGoodsDetail(c *gin.Context) {
 	}
 
 	dataMap := map[string]interface{}{
-		"data": map[string]interface{}{
-			"gid":         goodsDetail.Gid,
-			"uid":         goodsDetail.Uid,
-			"name":        goodsDetail.Name,
-			"uname":       goodsDetail.Uname,
-			"price":       goodsDetail.Price,
-			"detail":      goodsDetail.Detail,
-			"cover":       goodsDetail.Cover,
-			"create_time": goodsDetail.CreateTime,
-			"picList":     picList,
-		},
+		"gid":         goodsDetail.Gid,
+		"uid":         goodsDetail.Uid,
+		"name":        goodsDetail.Name,
+		"uname":       goodsDetail.Uname,
+		"price":       goodsDetail.Price,
+		"detail":      goodsDetail.Detail,
+		"cover":       goodsDetail.Cover,
+		"create_time": goodsDetail.CreateTime,
+		"picList":     picList,
 	}
 
 	log.Println(dataMap)
 	misc.Logger.Info("get pic list success", zap.Int32("gid", req.GetGid()))
 
 	utils.SuccessWithMsg(c, "get pic list success", dataMap)
+}
+
+func DeleteGoods(c *gin.Context) {
+	var form DeleteGoodsForm
+	var err error
+	if err = c.ShouldBindJSON(&form); err != nil {
+		misc.Logger.Error("handle delete goods bind json err", zap.String("err", err.Error()))
+		utils.FailWithMsg(c, "参数错误")
+		return
+	}
+
+	req := &proto.DeleteGoodsRequest{
+		Gid: form.Gid,
+	}
+
+	code, err := rpc.DeleteGoods(c.Request.Context(), req)
+	if err != nil || code == misc.CodeFail {
+		misc.Logger.Error("rpc delete goods err", zap.Error(err))
+		utils.FailWithMsg(c, "删除物品失败")
+		return
+	}
+
+	misc.Logger.Info("delete goods success", zap.Int32("gid", form.Gid))
+
+	utils.SuccessWithMsg(c, "delete goods success", nil)
+}
+
+func SearchGoods(c *gin.Context) {
+	var searchForm SearchGoodsForm
+	var err error
+	if err = c.ShouldBindJSON(&searchForm); err != nil {
+		misc.Logger.Error("handle get search goods bind json err", zap.String("err", err.Error()))
+		utils.FailWithMsg(c, "参数错误")
+		return
+	}
+
+	req := &proto.SearchGoodsRequest{
+		Name: searchForm.GName,
+	}
+
+	code, goodsList, err := rpc.SearchGoods(c.Request.Context(), req)
+	if err != nil || code == misc.CodeFail {
+		misc.Logger.Error("rpc searchGoods err", zap.Error(err))
+		utils.FailWithMsg(c, "搜索物品失败")
+		return
+	}
+
+	var list []map[string]interface{}
+
+	for _, goods := range goodsList {
+		list = append(list, map[string]interface{}{
+			"gid":         goods.Gid,
+			"uid":         goods.Uid,
+			"name":        goods.Name,
+			"uname":       goods.Uname,
+			"price":       goods.Price,
+			"detail":      goods.Detail,
+			"cover":       goods.Cover,
+			"create_time": goods.CreateTime,
+		})
+	}
+
+	log.Println(list)
+
+	dataMap := map[string]interface{}{
+		"data": list,
+		"len":  len(list),
+	}
+
+	misc.Logger.Info("get search goods list success", zap.String("name", req.Name))
+
+	utils.SuccessWithMsg(c, "search success", dataMap)
 }

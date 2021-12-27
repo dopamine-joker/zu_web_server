@@ -2,6 +2,7 @@ package misc
 
 import (
 	"github.com/spf13/viper"
+	"os"
 )
 
 var (
@@ -15,10 +16,15 @@ func Init() {
 	viper.SetConfigName("config")
 	viper.AddConfigPath("./config")
 	initLogger()
+	initKey()
 	if err = viper.ReadInConfig(); err != nil {
 		panic(err)
 	}
 	if err = viper.Unmarshal(&Conf); err != nil {
 		panic(err)
 	}
+}
+
+func initKey() {
+	Key = os.Getenv("KEY")
 }

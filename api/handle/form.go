@@ -11,8 +11,19 @@ type RegisterForm struct {
 	Name     string `form:"name" json:"name" binding:"required"`
 }
 
+type UploadFaceForm struct {
+	Id string `form:"id" json:"id" binding:"required"`
+}
+
 type TokenLoginForm struct {
 	Token string `form:"token" json:"token" binding:"required"`
+}
+
+type UpdateUserForm struct {
+	Id       int32  `form:"id" json:"id" binding:"required"`
+	Email    string `form:"email" json:"email" binding:"required"`
+	Password string `form:"password" json:"password" binding:"required"`
+	Name     string `form:"name" json:"name" binding:"required"`
 }
 
 type LogoutForm struct {
@@ -37,6 +48,37 @@ type GetGoodsForm struct {
 	Count *int32 `form:"count" json:"count" binding:"required"` //同理
 }
 
+type UserGoodsListForm struct {
+	Uid int32 `form:"uid" json:"uid" binding:"required"`
+}
+
 type PicListForm struct {
 	Gid *int32 `form:"gid" json:"gid" binding:"required"`
+}
+
+type SearchGoodsForm struct {
+	GName string `form:"gname" json:"gname" binding:"required"`
+}
+
+type DeleteGoodsForm struct {
+	Gid int32 `form:"gid" json:"gid" binding:"required"`
+}
+
+type AddOrderForm struct {
+	BuyId  int32 `form:"buyid" json:"buyid" binding:"required"`
+	SellId int32 `form:"sellid" json:"sellid" binding:"required"`
+	GId    int32 `form:"gid" json:"gid" binding:"required"`
+}
+
+type GetBuyOrderForm struct {
+	BuyId int32 `form:"buyid" json:"buyid" binding:"required"`
+}
+
+type GetSellOrderForm struct {
+	SellId int32 `form:"sellid" json:"sellid" binding:"required"`
+}
+
+type UpdateOrderForm struct {
+	Id     int32 `form:"id" json:"id" binding:"required"`
+	Status int32 `form:"status" json:"status" binding:"required"`
 }
