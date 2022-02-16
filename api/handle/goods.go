@@ -7,6 +7,8 @@ import (
 	"github.com/dopamine-joker/zu_web_server/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/mitchellh/mapstructure"
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/zap"
 	"log"
 	"strconv"
@@ -19,6 +21,9 @@ const (
 
 //Upload 该请求数据格式不为json,而为multipart/form-data
 func Upload(c *gin.Context) {
+
+	span := trace.SpanFromContext(c.Request.Context())
+	defer span.End()
 
 	form, err := c.MultipartForm()
 	if err != nil {
@@ -119,6 +124,10 @@ func Upload(c *gin.Context) {
 }
 
 func GetGoods(c *gin.Context) {
+
+	span := trace.SpanFromContext(c.Request.Context())
+	defer span.End()
+
 	var getGoodsForm GetGoodsForm
 	var err error
 	if err = c.ShouldBindJSON(&getGoodsForm); err != nil {
@@ -161,6 +170,10 @@ func GetGoods(c *gin.Context) {
 }
 
 func GetUserGoodsList(c *gin.Context) {
+
+	span := trace.SpanFromContext(c.Request.Context())
+	defer span.End()
+
 	var form UserGoodsListForm
 	var err error
 	if err = c.ShouldBindJSON(&form); err != nil {
@@ -204,6 +217,10 @@ func GetUserGoodsList(c *gin.Context) {
 }
 
 func GetGoodsDetail(c *gin.Context) {
+
+	span := trace.SpanFromContext(c.Request.Context())
+	defer span.End()
+
 	var picListForm PicListForm
 	var err error
 	if err = c.ShouldBindJSON(&picListForm); err != nil {
@@ -251,6 +268,10 @@ func GetGoodsDetail(c *gin.Context) {
 }
 
 func DeleteGoods(c *gin.Context) {
+
+	span := trace.SpanFromContext(c.Request.Context())
+	defer span.End()
+
 	var form DeleteGoodsForm
 	var err error
 	if err = c.ShouldBindJSON(&form); err != nil {
@@ -270,12 +291,21 @@ func DeleteGoods(c *gin.Context) {
 		return
 	}
 
+	span.SetAttributes(
+		attribute.Int64("goodId", int64(req.Gid)),
+		attribute.Int64("code", int64(code)),
+	)
+
 	misc.Logger.Info("delete goods success", zap.Int32("gid", form.Gid))
 
 	utils.SuccessWithMsg(c, "delete goods success", nil)
 }
 
 func SearchGoods(c *gin.Context) {
+
+	span := trace.SpanFromContext(c.Request.Context())
+	defer span.End()
+
 	var searchForm SearchGoodsForm
 	var err error
 	if err = c.ShouldBindJSON(&searchForm); err != nil {

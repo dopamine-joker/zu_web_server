@@ -34,7 +34,6 @@ func Login(c *gin.Context) {
 		Email:    loginForm.Email,
 		Password: loginForm.Password,
 	}
-	span.SetAttributes(attribute.String("email", req.GetEmail()))
 	code, token, user, err := rpc.Login(c.Request.Context(), req)
 	if code == misc.CodeFail || err != nil {
 		misc.Logger.Error("rpc login err", zap.Error(err))
@@ -42,6 +41,11 @@ func Login(c *gin.Context) {
 		return
 	}
 	misc.Logger.Info("login success", zap.String("email", loginForm.Email), zap.String("token", token))
+	span.SetAttributes(
+		attribute.String("email", req.Email),
+		attribute.String("token", token),
+		attribute.Int64("code", int64(code)),
+	)
 
 	dataMap := map[string]interface{}{
 		"token": token,
@@ -70,14 +74,17 @@ func TokenLogin(c *gin.Context) {
 		Token: tokenLoginForm.Token,
 	}
 
-	span.SetAttributes(attribute.String("token", req.GetToken()))
-
 	code, token, user, err := rpc.TokenLogin(c.Request.Context(), req)
 	if code == misc.CodeFail || token == "" || err != nil {
 		misc.Logger.Error("rpc tokenLogin err", zap.Error(err))
 		utils.FailWithMsg(c, utils.GetRpcMsg(err.Error()))
 		return
 	}
+
+	span.SetAttributes(
+		attribute.String("token", req.Token),
+		attribute.Int64("code", int64(code)),
+	)
 
 	misc.Logger.Info("tokenLogin success", zap.String("token", token))
 
@@ -90,6 +97,9 @@ func TokenLogin(c *gin.Context) {
 }
 
 func UpdateUser(c *gin.Context) {
+	span := trace.SpanFromContext(c.Request.Context())
+
+	defer span.End()
 	var form UpdateUserForm
 	var err error
 	if err = c.ShouldBindJSON(&form); err != nil {
@@ -112,10 +122,21 @@ func UpdateUser(c *gin.Context) {
 		return
 	}
 
+	span.SetAttributes(
+		attribute.Int64("id", int64(req.GetUid())),
+		attribute.String("email", req.GetEmail()),
+		attribute.String("name", req.GetName()),
+		attribute.String("password", req.GetPassword()),
+		attribute.Int64("code", int64(code)),
+	)
+
 	utils.SuccessWithMsg(c, "update user success", nil)
 }
 
 func Register(c *gin.Context) {
+	span := trace.SpanFromContext(c.Request.Context())
+
+	defer span.End()
 	var registerForm RegisterForm
 	if err := c.ShouldBindJSON(&registerForm); err != nil {
 		misc.Logger.Error("handle register bind json err", zap.String("err", err.Error()))
@@ -132,6 +153,11 @@ func Register(c *gin.Context) {
 		Password: registerForm.Password,
 	}
 
+	span.SetAttributes(attribute.String("email", req.Email),
+		attribute.String("name", req.Name),
+		attribute.String("password", req.Password),
+	)
+
 	code, err := rpc.Register(c.Request.Context(), req)
 	if code == misc.CodeFail || err != nil {
 		misc.Logger.Error("rpc register err", zap.Error(err))
@@ -146,6 +172,9 @@ func Register(c *gin.Context) {
 }
 
 func Logout(c *gin.Context) {
+	span := trace.SpanFromContext(c.Request.Context())
+
+	defer span.End()
 	var logoutForm LogoutForm
 	if err := c.ShouldBindJSON(&logoutForm); err != nil {
 		misc.Logger.Error("handle logout bind json err", zap.String("err", err.Error()))
@@ -167,6 +196,11 @@ func Logout(c *gin.Context) {
 		return
 	}
 
+	span.SetAttributes(
+		attribute.String("token", req.Token),
+		attribute.Int64("code", int64(code)),
+	)
+
 	misc.Logger.Info("logout success", zap.String("token", logoutForm.Token))
 
 	utils.SuccessWithMsg(c, "logout success", nil)
@@ -174,6 +208,10 @@ func Logout(c *gin.Context) {
 
 //GetSig 获取sdk初始化的签名
 func GetSig(c *gin.Context) {
+
+	span := trace.SpanFromContext(c.Request.Context())
+	defer span.End()
+
 	var getSigForm GetSigForm
 	var err error
 	if err = c.ShouldBindJSON(&getSigForm); err != nil {
@@ -189,6 +227,11 @@ func GetSig(c *gin.Context) {
 		return
 	}
 
+	span.SetAttributes(
+		attribute.String("sig", sig),
+		attribute.Int64("code", int64(code)),
+	)
+
 	dataMap := map[string]interface{}{
 		"sig": sig,
 	}
@@ -201,6 +244,10 @@ const (
 )
 
 func UpdateFace(c *gin.Context) {
+
+	span := trace.SpanFromContext(c.Request.Context())
+	defer span.End()
+
 	form, err := c.MultipartForm()
 	if err != nil {
 		misc.Logger.Error("Upload face err", zap.Error(err))
@@ -266,6 +313,11 @@ func UpdateFace(c *gin.Context) {
 		utils.FailWithMsg(c, "上传失败")
 		return
 	}
+
+	span.SetAttributes(
+		attribute.String("path", path),
+		attribute.Int64("code", int64(code)),
+	)
 
 	misc.Logger.Info("upload face success")
 

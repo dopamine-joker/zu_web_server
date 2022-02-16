@@ -6,10 +6,16 @@ import (
 	"github.com/dopamine-joker/zu_web_server/proto"
 	"github.com/dopamine-joker/zu_web_server/utils"
 	"github.com/gin-gonic/gin"
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/zap"
 )
 
 func AddOrder(c *gin.Context) {
+
+	span := trace.SpanFromContext(c.Request.Context())
+	defer span.End()
+
 	var form AddOrderForm
 	var err error
 	if err = c.ShouldBindJSON(&form); err != nil {
@@ -31,16 +37,21 @@ func AddOrder(c *gin.Context) {
 		return
 	}
 
-	//data := map[string]interface{}{
-	//	"oid": oid,
-	//}
-	//
-	//misc.Logger.Info("add order success", zap.Int32("oid", oid))
+	span.SetAttributes(
+		attribute.Int64("buyId", int64(form.BuyId)),
+		attribute.Int64("sellId", int64(form.SellId)),
+		attribute.Int64("goodId", int64(form.GId)),
+		attribute.Int64("code", int64(code)),
+	)
 
 	utils.SuccessWithMsg(c, "add order success", nil)
 }
 
 func GetBuyOrder(c *gin.Context) {
+
+	span := trace.SpanFromContext(c.Request.Context())
+	defer span.End()
+
 	var form GetBuyOrderForm
 	var err error
 	if err = c.ShouldBindJSON(&form); err != nil {
@@ -59,6 +70,11 @@ func GetBuyOrder(c *gin.Context) {
 		utils.FailWithMsg(c, "数据获取失败")
 		return
 	}
+
+	span.SetAttributes(
+		attribute.Int64("buyId", int64(form.BuyId)),
+		attribute.Int64("code", int64(code)),
+	)
 
 	var list []map[string]interface{}
 
@@ -89,6 +105,10 @@ func GetBuyOrder(c *gin.Context) {
 }
 
 func GetSellOrder(c *gin.Context) {
+
+	span := trace.SpanFromContext(c.Request.Context())
+	defer span.End()
+
 	var form GetSellOrderForm
 	var err error
 	if err = c.ShouldBindJSON(&form); err != nil {
@@ -107,6 +127,11 @@ func GetSellOrder(c *gin.Context) {
 		utils.FailWithMsg(c, "数据获取失败")
 		return
 	}
+
+	span.SetAttributes(
+		attribute.Int64("sellId", int64(form.SellId)),
+		attribute.Int64("code", int64(code)),
+	)
 
 	var list []map[string]interface{}
 
@@ -137,6 +162,10 @@ func GetSellOrder(c *gin.Context) {
 }
 
 func UpdateOrder(c *gin.Context) {
+
+	span := trace.SpanFromContext(c.Request.Context())
+	defer span.End()
+
 	var form UpdateOrderForm
 	var err error
 	if err = c.ShouldBindJSON(&form); err != nil {
@@ -155,6 +184,11 @@ func UpdateOrder(c *gin.Context) {
 		utils.FailWithMsg(c, "数据获取失败")
 		return
 	}
+
+	span.SetAttributes(
+		attribute.Int64("orderId", int64(req.Id)),
+		attribute.Int64("status", int64(req.Status)),
+	)
 
 	utils.SuccessWithMsg(c, "update order success", nil)
 }
