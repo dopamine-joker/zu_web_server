@@ -24,20 +24,20 @@ func AddOrder(c *gin.Context) {
 		Gid:    form.GId,
 	}
 
-	code, oid, err := rpc.AddOrder(c.Request.Context(), req)
+	code, err := rpc.AddOrder(c.Request.Context(), req)
 	if err != nil || code == misc.CodeFail {
 		misc.Logger.Error("rpc add order err", zap.Error(err))
 		utils.FailWithMsg(c, "添加失败")
 		return
 	}
 
-	data := map[string]interface{}{
-		"oid": oid,
-	}
+	//data := map[string]interface{}{
+	//	"oid": oid,
+	//}
+	//
+	//misc.Logger.Info("add order success", zap.Int32("oid", oid))
 
-	misc.Logger.Info("add order success", zap.Int32("oid", oid))
-
-	utils.SuccessWithMsg(c, "add order success", data)
+	utils.SuccessWithMsg(c, "add order success", nil)
 }
 
 func GetBuyOrder(c *gin.Context) {

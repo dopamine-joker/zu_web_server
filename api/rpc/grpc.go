@@ -183,13 +183,12 @@ func DeleteGoods(ctx context.Context, req *proto.DeleteGoodsRequest) (code int32
 }
 
 //AddOrder 增加订单
-func AddOrder(ctx context.Context, req *proto.AddOrderRequest) (code int32, oid int32, err error) {
+func AddOrder(ctx context.Context, req *proto.AddOrderRequest) (code int32, err error) {
 	response, err := LogicRpcClient.AddOrder(ctx, req)
 	if err != nil {
-		return misc.CodeFail, -1, err
+		return misc.CodeFail, err
 	}
 	code = response.Code
-	oid = response.Oid
 	return
 }
 

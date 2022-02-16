@@ -1,8 +1,13 @@
 [etcd]
-host = ["10.252.72.5:49166", ":10.252.72.5:49168", "10.252.72.5:49170"]
+host = ["192.168.0.111:49166", "192.168.0.111:49168", "192.168.0.111:49170"]
 basePath = "zuzuxia_srv"
 serverPathLogic = "LogicRpc"
 timeout = 5
+
+[jaeger]
+scheme = "http://"
+host = "192.168.0.111:14268"
+path = "/api/traces"
 
 [api]
 listenPort = 7070

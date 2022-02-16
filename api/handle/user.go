@@ -3,6 +3,8 @@ package handle
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/mitchellh/mapstructure"
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/zap"
 	"log"
 	"strconv"
@@ -14,6 +16,10 @@ import (
 )
 
 func Login(c *gin.Context) {
+
+	span := trace.SpanFromContext(c.Request.Context())
+	defer span.End()
+
 	var loginForm LoginForm
 	var err error
 	if err = c.ShouldBindJSON(&loginForm); err != nil {
@@ -28,6 +34,7 @@ func Login(c *gin.Context) {
 		Email:    loginForm.Email,
 		Password: loginForm.Password,
 	}
+	span.SetAttributes(attribute.String("email", req.GetEmail()))
 	code, token, user, err := rpc.Login(c.Request.Context(), req)
 	if code == misc.CodeFail || err != nil {
 		misc.Logger.Error("rpc login err", zap.Error(err))
@@ -44,6 +51,11 @@ func Login(c *gin.Context) {
 }
 
 func TokenLogin(c *gin.Context) {
+
+	span := trace.SpanFromContext(c.Request.Context())
+
+	defer span.End()
+
 	var tokenLoginForm TokenLoginForm
 	if err := c.ShouldBindJSON(&tokenLoginForm); err != nil {
 		misc.Logger.Error("handle tokenLogin bind json err", zap.String("err", err.Error()))
@@ -57,6 +69,8 @@ func TokenLogin(c *gin.Context) {
 	req := &proto.TokenLoginRequest{
 		Token: tokenLoginForm.Token,
 	}
+
+	span.SetAttributes(attribute.String("token", req.GetToken()))
 
 	code, token, user, err := rpc.TokenLogin(c.Request.Context(), req)
 	if code == misc.CodeFail || token == "" || err != nil {

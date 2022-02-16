@@ -2,14 +2,22 @@ package router
 
 import (
 	"github.com/dopamine-joker/zu_web_server/api/handle"
+	"github.com/dopamine-joker/zu_web_server/misc"
 	"github.com/dopamine-joker/zu_web_server/utils"
 	"github.com/gin-gonic/gin"
+	"go.opentelemetry.io/otel"
+
+	"go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin"
 )
 
 func Register() *gin.Engine {
 	r := gin.Default()
 	r.NoRoute(NoRouteFunc)
-	r.Use(CorsMiddleware(), UserAuthMiddleware(), gin.Recovery())
+	// prometheus
+	misc.StartMonitor(r)
+	monitor := misc.NewPrometheusMonitor(misc.NAMESPACE, misc.SERVICE)
+	r.Use(otelgin.Middleware(misc.SERVICE, otelgin.WithPropagators(otel.GetTextMapPropagator()), otelgin.WithTracerProvider(otel.GetTracerProvider())),
+		monitor.PromMiddleware(), CorsMiddleware(), UserAuthMiddleware(), gin.Recovery())
 	initUserRouter(r)
 	initGoodsRouter(r)
 	initOrderRouter(r)

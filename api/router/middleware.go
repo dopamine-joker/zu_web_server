@@ -15,8 +15,7 @@ const (
 )
 
 var (
-	noVerifyRoute = []string{"/user/login", "/user/register", "/user/tokenLogin", "/user/getSig", "/goods/search",
-		"/order/add", "/order/getBuy", "/order/getSell", "/order/update"}
+	noVerifyRoute = []string{"/user/login", "/user/register", "/user/tokenLogin", "/user/getSig", "/metrics"}
 )
 
 func CorsMiddleware() gin.HandlerFunc {

@@ -1,6 +1,7 @@
 package misc
 
 import (
+	"fmt"
 	"github.com/spf13/viper"
 	"os"
 )
@@ -15,14 +16,16 @@ func Init() {
 	viper.SetConfigType("toml")
 	viper.SetConfigName("config")
 	viper.AddConfigPath("./config")
-	initLogger()
-	initKey()
 	if err = viper.ReadInConfig(); err != nil {
 		panic(err)
 	}
 	if err = viper.Unmarshal(&Conf); err != nil {
 		panic(err)
 	}
+	initLogger()
+	initKey()
+	initJaeger()
+	fmt.Println(Conf)
 }
 
 func initKey() {
