@@ -21,7 +21,13 @@ func Register() *gin.Engine {
 	initUserRouter(r)
 	initGoodsRouter(r)
 	initOrderRouter(r)
+	initVoiceRouter(r)
 	return r
+}
+
+func initVoiceRouter(r *gin.Engine) {
+	voiceGroup := r.Group("/voice")
+	voiceGroup.POST("/process", handle.VoiceProcess)
 }
 
 func initUserRouter(r *gin.Engine) {

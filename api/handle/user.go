@@ -276,7 +276,7 @@ func UpdateFace(c *gin.Context) {
 					misc.Logger.Error("pic open file err", zap.Error(err))
 					utils.FailWithMsg(c, "图片解码出现问题")
 				}
-				picBytes := make([]byte, 4*1024)
+				picBytes := make([]byte, 10*1024*1024)
 				n, err := src.Read(picBytes)
 				if err != nil {
 					misc.Logger.Error("pic file read err", zap.Error(err))
@@ -288,9 +288,9 @@ func UpdateFace(c *gin.Context) {
 		}
 	}
 
-	var pic *proto.PicStream
+	var pic *proto.FileStream
 	for name, bytes := range face {
-		pic = &proto.PicStream{
+		pic = &proto.FileStream{
 			Name:    name,
 			Content: bytes,
 		}

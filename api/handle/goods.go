@@ -61,7 +61,7 @@ func Upload(c *gin.Context) {
 				utils.FailWithMsg(c, "图片解码出现问题")
 			}
 			// 读取其中的byte流
-			picBytes := make([]byte, 4*1024)
+			picBytes := make([]byte, 10*1024*1024)
 			n, err := src.Read(picBytes)
 			if err != nil {
 				misc.Logger.Error("pic file read err", zap.Error(err))
@@ -79,17 +79,17 @@ func Upload(c *gin.Context) {
 		}
 	}
 
-	var picList []*proto.PicStream
+	var picList []*proto.FileStream
 	for name, bytes := range files {
-		picList = append(picList, &proto.PicStream{
+		picList = append(picList, &proto.FileStream{
 			Name:    name,
 			Content: bytes,
 		})
 	}
 
-	var coverPic *proto.PicStream
+	var coverPic *proto.FileStream
 	for name, bytes := range cover {
-		coverPic = &proto.PicStream{
+		coverPic = &proto.FileStream{
 			Name:    name,
 			Content: bytes,
 		}
@@ -317,6 +317,8 @@ func SearchGoods(c *gin.Context) {
 	req := &proto.SearchGoodsRequest{
 		Name: searchForm.GName,
 	}
+
+	misc.Logger.Info("search req", zap.String("name", req.Name))
 
 	code, goodsList, err := rpc.SearchGoods(c.Request.Context(), req)
 	if err != nil || code == misc.CodeFail {

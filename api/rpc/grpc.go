@@ -106,6 +106,17 @@ func GetSig(ctx context.Context, userId string, sdkAppId, expire int) (code int3
 	return
 }
 
+//VoiceToTxt 语音转文字
+func VoiceToTxt(ctx context.Context, req *proto.VoiceToTxtRequest) (code int32, txt string, err error) {
+	response, err := LogicRpcClient.VoiceToTxt(ctx, req)
+	if err != nil {
+		return misc.CodeFail, "", err
+	}
+	code = response.Code
+	txt = response.Txt
+	return
+}
+
 //UploadFace 上传头像
 func UploadFace(ctx context.Context, req *proto.UploadFaceRequest) (code int32, path string, err error) {
 	response, err := LogicRpcClient.UploadFace(ctx, req)

@@ -1,12 +1,12 @@
 [etcd]
-host = ["172.17.0.6:49166", "172.17.0.6:49168", "172.17.0.6:49170"]
+host = ["192.168.0.111:49166", "192.168.0.111:49168", "192.168.0.111:49170"]
 basePath = "zuzuxia_srv"
 serverPathLogic = "ZuLogicRpc"
 timeout = 5
 
 [jaeger]
 scheme = "http://"
-host = "172.17.0.6:14268"
+host = "192.168.0.111:14268"
 path = "/api/traces"
 
 [api]
