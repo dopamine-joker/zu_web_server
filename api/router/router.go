@@ -22,7 +22,24 @@ func Register() *gin.Engine {
 	initGoodsRouter(r)
 	initOrderRouter(r)
 	initVoiceRouter(r)
+	initCommentRouter(r)
+	initFavoritesRouter(r)
 	return r
+}
+
+func initFavoritesRouter(r *gin.Engine) {
+	favoritesGroup := r.Group("/favorites")
+	favoritesGroup.POST("/add", handle.AddFavorites)
+	favoritesGroup.POST("/delete", handle.DeleteFavorites)
+	favoritesGroup.POST("/user", handle.GetUserFavorites)
+}
+
+func initCommentRouter(r *gin.Engine) {
+	commentGroup := r.Group("/comment")
+	commentGroup.POST("/add", handle.AddComment)
+	commentGroup.POST("/delete", handle.DeleteComment)
+	commentGroup.POST("/user", handle.GetCommentByUserId)
+	commentGroup.POST("/goods", handle.GetCommentByGoodsId)
 }
 
 func initVoiceRouter(r *gin.Engine) {

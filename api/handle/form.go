@@ -82,3 +82,36 @@ type UpdateOrderForm struct {
 	Id     int32 `form:"id" json:"id" binding:"required"`
 	Status int32 `form:"status" json:"status" binding:"required"`
 }
+
+type AddFavoritesForm struct {
+	UId int32 `form:"uid" json:"uid" binding:"required"`
+	GId int32 `form:"gid" json:"gid" binding:"required"`
+}
+
+type DeleteFavoritesForm struct {
+	FId int32 `form:"fid" json:"fid" binding:"required"`
+}
+
+type GetUserFavoritesForm struct {
+	UId int32 `form:"uid" json:"uid" binding:"required"`
+}
+
+type AddCommentForm struct {
+	UId     int32  `form:"uid" json:"uid" binding:"required"`
+	GId     int32  `form:"gid" json:"gid" binding:"required"`
+	OId     int32  `form:"oid" json:"oid" binding:"required"`
+	Level   int32  `form:"level" json:"level" binding:"required"`
+	Content string `form:"content" json:"content" binding:"required"`
+}
+
+type GetCommentByUserIdForm struct {
+	UId int32 `form:"uid" json:"uid" binding:"required"`
+}
+
+type GetCommentByGoodsIdForm struct {
+	GId int32 `form:"gid" json:"gid" binding:"required"`
+}
+
+type DeleteCommentForm struct {
+	CId int32 `form:"cid" json:"cid" binding:"required"`
+}

@@ -234,3 +234,78 @@ func UpdateOrder(ctx context.Context, req *proto.UpdateOrderRequest) (code int32
 	code = response.Code
 	return
 }
+
+//AddFavorites 增加收藏夹
+func AddFavorites(ctx context.Context, req *proto.AddFavoritesRequest) (code, fid int32, err error) {
+	response, err := LogicRpcClient.AddFavorites(ctx, req)
+	if err != nil {
+		return misc.CodeFail, -1, err
+	}
+	code = response.Code
+	fid = response.Fid
+	return
+}
+
+//DeleteFavorites 删除收藏夹
+func DeleteFavorites(ctx context.Context, req *proto.DeleteFavoritesRequest) (code int32, err error) {
+	response, err := LogicRpcClient.DeleteFavorites(ctx, req)
+	if err != nil {
+		return misc.CodeFail, err
+	}
+	code = response.Code
+	return
+}
+
+//GetUserFavorites 获取用户收藏夹
+func GetUserFavorites(ctx context.Context, req *proto.GetUserFavoritesRequest) (code int32, list []*proto.UserFavorites, err error) {
+	response, err := LogicRpcClient.GetUserFavorites(ctx, req)
+	if err != nil {
+		return misc.CodeFail, nil, err
+	}
+	code = response.Code
+	list = response.UserFavoritesList
+	return
+}
+
+//AddComment 添加评论
+func AddComment(ctx context.Context, req *proto.AddCommentRequest) (code, cid int32, err error) {
+	response, err := LogicRpcClient.AddComment(ctx, req)
+	if err != nil {
+		return misc.CodeFail, -1, err
+	}
+	code = response.Code
+	cid = response.Cid
+	return
+}
+
+//GetCommentByUserId 根据用户id拉取评论
+func GetCommentByUserId(ctx context.Context, req *proto.GetCommentByUserIdRequest) (code int32, list []*proto.UserComment, err error) {
+	response, err := LogicRpcClient.GetCommentByUserId(ctx, req)
+	if err != nil {
+		return misc.CodeFail, nil, err
+	}
+	code = response.Code
+	list = response.UserCommentList
+	return
+}
+
+//GetCommentByGoodsId 根据物品id拉取评论
+func GetCommentByGoodsId(ctx context.Context, req *proto.GetCommentByGoodsIdRequest) (code int32, list []*proto.GoodsComment, err error) {
+	response, err := LogicRpcClient.GetCommentByGoodsId(ctx, req)
+	if err != nil {
+		return misc.CodeFail, nil, err
+	}
+	code = response.Code
+	list = response.CommentList
+	return
+}
+
+//DeleteComment 删除评论
+func DeleteComment(ctx context.Context, req *proto.DeleteCommentRequest) (code int32, err error) {
+	response, err := LogicRpcClient.DeleteComment(ctx, req)
+	if err != nil {
+		return misc.CodeFail, err
+	}
+	code = response.Code
+	return
+}
