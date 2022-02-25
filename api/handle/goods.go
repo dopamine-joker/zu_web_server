@@ -156,6 +156,7 @@ func GetGoods(c *gin.Context) {
 		m["uname"] = goods.Uname
 		m["price"] = goods.Price
 		m["cover"] = goods.Cover
+		m["sell_num"] = goods.SellNum
 		dataMap = append(dataMap, m)
 	}
 
@@ -163,8 +164,6 @@ func GetGoods(c *gin.Context) {
 		"len":   len(dataMap),
 		"goods": dataMap,
 	}
-
-	log.Println(res)
 
 	utils.SuccessWithMsg(c, "get goods list success", res)
 }
@@ -202,6 +201,7 @@ func GetUserGoodsList(c *gin.Context) {
 			"name":        g.Name,
 			"uname":       g.Uname,
 			"price":       g.Price,
+			"sell_num":    g.SellNum,
 			"detail":      g.Detail,
 			"cover":       g.Cover,
 			"create_time": g.CreateTime,
@@ -255,6 +255,7 @@ func GetGoodsDetail(c *gin.Context) {
 		"name":        goodsDetail.Name,
 		"uname":       goodsDetail.Uname,
 		"price":       goodsDetail.Price,
+		"sell_num":    goodsDetail.SellNum,
 		"detail":      goodsDetail.Detail,
 		"cover":       goodsDetail.Cover,
 		"create_time": goodsDetail.CreateTime,
@@ -336,13 +337,12 @@ func SearchGoods(c *gin.Context) {
 			"name":        goods.Name,
 			"uname":       goods.Uname,
 			"price":       goods.Price,
+			"sell_num":    goods.SellNum,
 			"detail":      goods.Detail,
 			"cover":       goods.Cover,
 			"create_time": goods.CreateTime,
 		})
 	}
-
-	log.Println(list)
 
 	dataMap := map[string]interface{}{
 		"data": list,

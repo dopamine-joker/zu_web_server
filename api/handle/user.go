@@ -112,7 +112,10 @@ func UpdateUser(c *gin.Context) {
 		Uid:      form.Id,
 		Email:    form.Email,
 		Name:     form.Name,
+		Phone:    form.Phone,
 		Password: form.Password,
+		School:   form.School,
+		Sex:      form.Sex,
 	}
 
 	code, err := rpc.UpdateUser(c.Request.Context(), req)
@@ -125,8 +128,11 @@ func UpdateUser(c *gin.Context) {
 	span.SetAttributes(
 		attribute.Int64("id", int64(req.GetUid())),
 		attribute.String("email", req.GetEmail()),
+		attribute.String("phone", req.GetPhone()),
 		attribute.String("name", req.GetName()),
 		attribute.String("password", req.GetPassword()),
+		attribute.String("school", req.GetSchool()),
+		attribute.Int64("sex", int64(req.GetSex())),
 		attribute.Int64("code", int64(code)),
 	)
 

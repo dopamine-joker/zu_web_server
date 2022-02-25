@@ -22,8 +22,11 @@ type TokenLoginForm struct {
 type UpdateUserForm struct {
 	Id       int32  `form:"id" json:"id" binding:"required"`
 	Email    string `form:"email" json:"email" binding:"required"`
+	Phone    string `form:"phone" json:"phone" binding:"required"`
 	Password string `form:"password" json:"password" binding:"required"`
 	Name     string `form:"name" json:"name" binding:"required"`
+	School   string `form:"school" json:"school" binding:"required"`
+	Sex      int32  `form:"sex" json:"sex" binding:"sex"`
 }
 
 type LogoutForm struct {
@@ -65,9 +68,10 @@ type DeleteGoodsForm struct {
 }
 
 type AddOrderForm struct {
-	BuyId  int32 `form:"buyid" json:"buyid" binding:"required"`
-	SellId int32 `form:"sellid" json:"sellid" binding:"required"`
-	GId    int32 `form:"gid" json:"gid" binding:"required"`
+	BuyId  int32  `form:"buyid" json:"buyid" binding:"required"`
+	SellId int32  `form:"sellid" json:"sellid" binding:"required"`
+	GId    int32  `form:"gid" json:"gid" binding:"required"`
+	School string `form:"school" json:"school" binding:"required"`
 }
 
 type GetBuyOrderForm struct {

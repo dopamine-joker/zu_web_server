@@ -28,6 +28,7 @@ func AddOrder(c *gin.Context) {
 		Buyid:  form.BuyId,
 		Sellid: form.SellId,
 		Gid:    form.GId,
+		School: form.School,
 	}
 
 	code, err := rpc.AddOrder(c.Request.Context(), req)
@@ -41,6 +42,7 @@ func AddOrder(c *gin.Context) {
 		attribute.Int64("buyId", int64(form.BuyId)),
 		attribute.Int64("sellId", int64(form.SellId)),
 		attribute.Int64("goodId", int64(form.GId)),
+		attribute.String("school", form.School),
 		attribute.Int64("code", int64(code)),
 	)
 
@@ -87,6 +89,7 @@ func GetBuyOrder(c *gin.Context) {
 			"sellName": order.SellName,
 			"gid":      order.GId,
 			"gName":    order.Gname,
+			"school":   order.School,
 			"price":    order.Price,
 			"cover":    order.Cover,
 			"status":   order.Status,
@@ -144,6 +147,7 @@ func GetSellOrder(c *gin.Context) {
 			"sellName": order.SellName,
 			"gid":      order.GId,
 			"gName":    order.Gname,
+			"school":   order.School,
 			"price":    order.Price,
 			"cover":    order.Cover,
 			"status":   order.Status,
