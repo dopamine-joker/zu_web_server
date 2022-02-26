@@ -156,7 +156,7 @@ func GetGoods(c *gin.Context) {
 		m["uname"] = goods.Uname
 		m["price"] = goods.Price
 		m["cover"] = goods.Cover
-		m["sell_num"] = goods.SellNum
+		m["school"] = goods.School
 		dataMap = append(dataMap, m)
 	}
 
@@ -201,7 +201,7 @@ func GetUserGoodsList(c *gin.Context) {
 			"name":        g.Name,
 			"uname":       g.Uname,
 			"price":       g.Price,
-			"sell_num":    g.SellNum,
+			"school":      g.School,
 			"detail":      g.Detail,
 			"cover":       g.Cover,
 			"create_time": g.CreateTime,
@@ -255,7 +255,7 @@ func GetGoodsDetail(c *gin.Context) {
 		"name":        goodsDetail.Name,
 		"uname":       goodsDetail.Uname,
 		"price":       goodsDetail.Price,
-		"sell_num":    goodsDetail.SellNum,
+		"school":      goodsDetail.School,
 		"detail":      goodsDetail.Detail,
 		"cover":       goodsDetail.Cover,
 		"create_time": goodsDetail.CreateTime,
@@ -337,7 +337,7 @@ func SearchGoods(c *gin.Context) {
 			"name":        goods.Name,
 			"uname":       goods.Uname,
 			"price":       goods.Price,
-			"sell_num":    goods.SellNum,
+			"school":      goods.School,
 			"detail":      goods.Detail,
 			"cover":       goods.Cover,
 			"create_time": goods.CreateTime,

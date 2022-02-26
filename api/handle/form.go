@@ -43,6 +43,7 @@ type UploadForm struct {
 	Uid    string `form:"uid" json:"uid" binding:"required"`
 	Name   string `form:"name" json:"token" binding:"required"`
 	Price  string `form:"price" json:"price" binding:"required"`
+	School string `form:"school" json:"school" binding:"required"`
 	Detail string `form:"detail" json:"detail" binding:"required"`
 }
 
