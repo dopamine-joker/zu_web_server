@@ -174,6 +174,7 @@ func GetCommentByGoodsId(c *gin.Context) {
 			"level":    comment.Level,
 			"time":     comment.Time,
 			"userName": comment.Uname,
+			"userFace": comment.Uface,
 		})
 	}
 
