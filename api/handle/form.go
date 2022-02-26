@@ -26,7 +26,7 @@ type UpdateUserForm struct {
 	Password string `form:"password" json:"password" binding:"required"`
 	Name     string `form:"name" json:"name" binding:"required"`
 	School   string `form:"school" json:"school" binding:"required"`
-	Sex      int32  `form:"sex" json:"sex" binding:"sex"`
+	Sex      int32  `form:"sex" json:"sex" binding:"required"`
 }
 
 type LogoutForm struct {
