@@ -106,6 +106,7 @@ func Upload(c *gin.Context) {
 		Uid:     int32(uidInt32),
 		Name:    uploadForm.Name,
 		Price:   uploadForm.Price,
+		School:  uploadForm.School,
 		Detail:  uploadForm.Detail,
 		Cover:   coverPic,
 		PicList: picList,
