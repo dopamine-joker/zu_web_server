@@ -1,9 +1,17 @@
 package misc
 
 type Config struct {
+	RedisCfg  RedisConfig  `mapstructure:"redis"`
 	Api       ApiConfig    `mapstructure:"api"`
 	EtcdCfg   EtcdConfig   `mapstructure:"etcd"`
 	JaegerCfg JaegerConfig `mapstructure:"jaeger"`
+}
+
+type RedisConfig struct {
+	Address  string `mapstructure:"address"`
+	Password string `mapstructure:"password"`
+	Port     string `mapstructure:"port"`
+	Db       int    `mapstructure:"db"`
 }
 
 type ApiConfig struct {

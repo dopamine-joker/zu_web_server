@@ -1,6 +1,7 @@
 package misc
 
 import (
+	"github.com/dopamine-joker/zu_web_server/db"
 	"github.com/spf13/viper"
 	"os"
 )
@@ -24,6 +25,7 @@ func Init() {
 	initLogger()
 	initKey()
 	initJaeger()
+	db.InitRedis(Conf.RedisCfg.Address, Conf.RedisCfg.Port, Conf.RedisCfg.Password, Conf.RedisCfg.Db)
 }
 
 func initKey() {

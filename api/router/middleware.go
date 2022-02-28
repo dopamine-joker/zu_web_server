@@ -1,17 +1,22 @@
 package router
 
 import (
+	"fmt"
+	"net/http"
+	"time"
+
 	"github.com/dopamine-joker/zu_web_server/api/rpc"
+	"github.com/dopamine-joker/zu_web_server/db"
 	"github.com/dopamine-joker/zu_web_server/misc"
 	"github.com/dopamine-joker/zu_web_server/proto"
 	"github.com/dopamine-joker/zu_web_server/utils"
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 const (
-	TokenKey = "X-TOKEN"
-	UserInfo = "X-USER"
+	TokenKey   = "X-TOKEN"
+	UserInfo   = "X-USER"
+	CountLimit = 20
 )
 
 var (
@@ -35,8 +40,9 @@ func CorsMiddleware() gin.HandlerFunc {
 
 func UserAuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		uri := c.Request.RequestURI
 		// 某些路由不需要检测
-		if utils.IsContain(noVerifyRoute, c.Request.RequestURI) {
+		if utils.IsContain(noVerifyRoute, uri) {
 			c.Next()
 			return
 		}
@@ -56,6 +62,30 @@ func UserAuthMiddleware() gin.HandlerFunc {
 			return
 		}
 		c.Set(UserInfo, user)
+		// redis增加计数
+		redisKey := fmt.Sprintf("%s-%s", token, uri)
+
+		exist, err := db.RedisClient.Exists(c.Request.Context(), redisKey).Result()
+		if err != nil {
+			c.Abort()
+			utils.ResponseWithCode(c, misc.CodeFail, "内部数据库错误", nil)
+			return
+		}
+		cnt, err := db.RedisClient.Incr(c.Request.Context(), redisKey).Result()
+		if err != nil {
+			c.Abort()
+			utils.ResponseWithCode(c, misc.CodeFail, "内部数据库错误", nil)
+			return
+		}
+		if cnt > CountLimit {
+			c.Abort()
+			utils.ResponseWithCode(c, misc.CodeAPILimit, "访问太频繁拉，请稍后再试~", nil)
+			return
+		}
+		// 一开始不存在，设置时间
+		if exist <= 0 {
+			db.RedisClient.Expire(c.Request.Context(), redisKey, time.Second)
+		}
 		c.Next()
 	}
 }

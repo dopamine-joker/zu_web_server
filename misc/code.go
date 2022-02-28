@@ -6,6 +6,7 @@ const (
 	CodeFail         = 1
 	CodeUnknownError = -1
 	CodeTokenError   = 400
+	CodeAPILimit     = 403
 )
 
 //MsgCodeMap 默认错误码对应信息

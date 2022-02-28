@@ -1,3 +1,9 @@
+[redis]
+address = "127.0.0.1"
+port = 6379
+passWord = "doper"
+db = 0
+
 [etcd]
 host = ["192.168.0.111:49166", "192.168.0.111:49168", "192.168.0.111:49170"]
 basePath = "zuzuxia_srv"
