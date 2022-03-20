@@ -24,8 +24,14 @@ func AddOrder(c *gin.Context) {
 		return
 	}
 
+	uid, err := utils.GetContextUserId(c)
+	if err != nil {
+		misc.Logger.Error("请求Token参数错误")
+		utils.FailWithMsg(c, err.Error())
+	}
+
 	req := &proto.AddOrderRequest{
-		Buyid:  form.BuyId,
+		Buyid:  uid,
 		Sellid: form.SellId,
 		Gid:    form.GId,
 		School: form.School,
@@ -39,7 +45,7 @@ func AddOrder(c *gin.Context) {
 	}
 
 	span.SetAttributes(
-		attribute.Int64("buyId", int64(form.BuyId)),
+		attribute.Int64("buyId", int64(uid)),
 		attribute.Int64("sellId", int64(form.SellId)),
 		attribute.Int64("goodId", int64(form.GId)),
 		attribute.String("school", form.School),
@@ -54,16 +60,14 @@ func GetBuyOrder(c *gin.Context) {
 	span := trace.SpanFromContext(c.Request.Context())
 	defer span.End()
 
-	var form GetBuyOrderForm
-	var err error
-	if err = c.ShouldBindJSON(&form); err != nil {
-		misc.Logger.Error("handle get buy order bind json err", zap.String("err", err.Error()))
-		utils.FailWithMsg(c, "参数错误")
-		return
+	uid, err := utils.GetContextUserId(c)
+	if err != nil {
+		misc.Logger.Error("请求Token参数错误")
+		utils.FailWithMsg(c, err.Error())
 	}
 
 	req := &proto.GetBuyOrderRequest{
-		Buyid: form.BuyId,
+		Buyid: uid,
 	}
 
 	code, protoList, err := rpc.GetBuyOrder(c.Request.Context(), req)
@@ -74,7 +78,7 @@ func GetBuyOrder(c *gin.Context) {
 	}
 
 	span.SetAttributes(
-		attribute.Int64("buyId", int64(form.BuyId)),
+		attribute.Int64("buyId", int64(uid)),
 		attribute.Int64("code", int64(code)),
 	)
 
@@ -112,16 +116,14 @@ func GetSellOrder(c *gin.Context) {
 	span := trace.SpanFromContext(c.Request.Context())
 	defer span.End()
 
-	var form GetSellOrderForm
-	var err error
-	if err = c.ShouldBindJSON(&form); err != nil {
-		misc.Logger.Error("handle get buy order bind json err", zap.String("err", err.Error()))
-		utils.FailWithMsg(c, "参数错误")
-		return
+	uid, err := utils.GetContextUserId(c)
+	if err != nil {
+		misc.Logger.Error("请求Token参数错误")
+		utils.FailWithMsg(c, err.Error())
 	}
 
 	req := &proto.GetSellOrderRequest{
-		Sellid: form.SellId,
+		Sellid: uid,
 	}
 
 	code, protoList, err := rpc.GetSellOrder(c.Request.Context(), req)
@@ -132,7 +134,7 @@ func GetSellOrder(c *gin.Context) {
 	}
 
 	span.SetAttributes(
-		attribute.Int64("sellId", int64(form.SellId)),
+		attribute.Int64("sellId", int64(uid)),
 		attribute.Int64("code", int64(code)),
 	)
 
@@ -178,10 +180,18 @@ func UpdateOrder(c *gin.Context) {
 		return
 	}
 
+	uid, err := utils.GetContextUserId(c)
+	if err != nil {
+		misc.Logger.Error("请求Token参数错误")
+		utils.FailWithMsg(c, err.Error())
+	}
+
 	req := &proto.UpdateOrderRequest{
 		Id:     form.Id,
+		Uid:    uid,
 		Status: form.Status,
 	}
+
 	code, err := rpc.UpdateOrder(c.Request.Context(), req)
 	if err != nil || code == misc.CodeFail {
 		misc.Logger.Error("rpc update order err", zap.Error(err))

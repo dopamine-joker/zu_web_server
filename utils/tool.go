@@ -1,6 +1,8 @@
 package utils
 
 import (
+	"errors"
+	"github.com/dopamine-joker/zu_web_server/api/router"
 	"net/http"
 	"strings"
 
@@ -31,6 +33,20 @@ func ResponseWithCode(c *gin.Context, msgCode int, msg interface{}, data interfa
 		"message": msg,
 		"data":    data,
 	})
+}
+
+func GetContextUserId(c *gin.Context) (uid int32, err error) {
+	val, exists := c.Get(router.UserId)
+	if !exists {
+		misc.Logger.Error("Token无法识别用户id")
+		return -1, errors.New("用户未登陆")
+	}
+	uid, ok := val.(int32)
+	if !ok {
+		misc.Logger.Error("gin Context参数错误")
+		return -1, errors.New("服务器内部参数错误")
+	}
+	return uid, nil
 }
 
 //GetRpcMsg 提取rpc调用的错误信息

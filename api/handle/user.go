@@ -1,18 +1,16 @@
 package handle
 
 import (
+	"github.com/dopamine-joker/zu_web_server/api/rpc"
+	"github.com/dopamine-joker/zu_web_server/misc"
+	"github.com/dopamine-joker/zu_web_server/proto"
+	"github.com/dopamine-joker/zu_web_server/utils"
 	"github.com/gin-gonic/gin"
-	"github.com/mitchellh/mapstructure"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/zap"
 	"log"
 	"strconv"
-
-	"github.com/dopamine-joker/zu_web_server/api/rpc"
-	"github.com/dopamine-joker/zu_web_server/misc"
-	"github.com/dopamine-joker/zu_web_server/proto"
-	"github.com/dopamine-joker/zu_web_server/utils"
 )
 
 func Login(c *gin.Context) {
@@ -108,8 +106,14 @@ func UpdateUser(c *gin.Context) {
 		return
 	}
 
+	uid, err := utils.GetContextUserId(c)
+	if err != nil {
+		misc.Logger.Error("请求Token参数错误")
+		utils.FailWithMsg(c, err.Error())
+	}
+
 	req := &proto.UpdateUserRequest{
-		Uid:      form.Id,
+		Uid:      uid,
 		Email:    form.Email,
 		Name:     form.Name,
 		Phone:    form.Phone,
@@ -226,7 +230,13 @@ func GetSig(c *gin.Context) {
 		return
 	}
 
-	code, sig, err := rpc.GetSig(c.Request.Context(), getSigForm.UserId, getSigForm.SdkAppId, getSigForm.Expire)
+	uid, err := utils.GetContextUserId(c)
+	if err != nil {
+		misc.Logger.Error("请求Token参数错误")
+		utils.FailWithMsg(c, err.Error())
+	}
+
+	code, sig, err := rpc.GetSig(c.Request.Context(), strconv.FormatInt(int64(uid), 10), getSigForm.SdkAppId, getSigForm.Expire)
 	if code == misc.CodeFail || err != nil {
 		misc.Logger.Error("rpc getSIg err", zap.Error(err))
 		utils.FailWithMsg(c, "获取签名失败")
@@ -261,15 +271,15 @@ func UpdateFace(c *gin.Context) {
 		return
 	}
 
+	uid, err := utils.GetContextUserId(c)
+	if err != nil {
+		misc.Logger.Error("请求Token参数错误")
+		utils.FailWithMsg(c, err.Error())
+	}
+
 	dataMap := make(map[string]interface{})
 	for key, vals := range form.Value {
 		dataMap[key] = vals[0]
-	}
-	var uploadForm UploadFaceForm
-	if err = mapstructure.Decode(dataMap, &uploadForm); err != nil {
-		misc.Logger.Error("upload decode struct err", zap.Error(err))
-		utils.FailWithMsg(c, "请求参数错误")
-		return
 	}
 
 	face := make(map[string][]byte)
@@ -302,14 +312,8 @@ func UpdateFace(c *gin.Context) {
 		}
 	}
 
-	uidInt32, err := strconv.ParseInt(uploadForm.Id, 10, 32)
-	if err != nil {
-		misc.Logger.Error("parse userid err", zap.String("uid", uploadForm.Id))
-		utils.FailWithMsg(c, "用户id解析出错")
-	}
-
 	req := &proto.UploadFaceRequest{
-		Uid: int32(uidInt32),
+		Uid: uid,
 		Pic: pic,
 	}
 

@@ -24,8 +24,14 @@ func AddFavorites(c *gin.Context) {
 		return
 	}
 
+	uid, err := utils.GetContextUserId(c)
+	if err != nil {
+		misc.Logger.Error("请求Token参数错误")
+		utils.FailWithMsg(c, err.Error())
+	}
+
 	req := &proto.AddFavoritesRequest{
-		Uid: form.UId,
+		Uid: uid,
 		Gid: form.GId,
 	}
 
@@ -60,7 +66,14 @@ func DeleteFavorites(c *gin.Context) {
 		return
 	}
 
+	uid, err := utils.GetContextUserId(c)
+	if err != nil {
+		misc.Logger.Error("请求Token参数错误")
+		utils.FailWithMsg(c, err.Error())
+	}
+
 	req := &proto.DeleteFavoritesRequest{
+		Uid: uid,
 		Fid: form.FId,
 	}
 
@@ -83,16 +96,14 @@ func GetUserFavorites(c *gin.Context) {
 	span := trace.SpanFromContext(c.Request.Context())
 	defer span.End()
 
-	var form GetUserFavoritesForm
-	var err error
-	if err = c.ShouldBindJSON(&form); err != nil {
-		misc.Logger.Error("handle get user favorites bind json err", zap.String("err", err.Error()))
-		utils.FailWithMsg(c, "参数错误")
-		return
+	uid, err := utils.GetContextUserId(c)
+	if err != nil {
+		misc.Logger.Error("请求Token参数错误")
+		utils.FailWithMsg(c, err.Error())
 	}
 
 	req := &proto.GetUserFavoritesRequest{
-		Uid: form.UId,
+		Uid: uid,
 	}
 
 	code, protoList, err := rpc.GetUserFavorites(c.Request.Context(), req)

@@ -11,7 +11,6 @@ import (
 	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/zap"
 	"log"
-	"strconv"
 )
 
 const (
@@ -43,6 +42,12 @@ func Upload(c *gin.Context) {
 		misc.Logger.Error("upload decode struct err", zap.Error(err))
 		utils.FailWithMsg(c, "请求参数错误")
 		return
+	}
+
+	uid, err := utils.GetContextUserId(c)
+	if err != nil {
+		misc.Logger.Error("请求Token参数错误")
+		utils.FailWithMsg(c, err.Error())
 	}
 
 	// 提取文件,转换为byte数组后保存
@@ -95,15 +100,9 @@ func Upload(c *gin.Context) {
 		}
 	}
 
-	uidInt32, err := strconv.ParseInt(uploadForm.Uid, 10, 32)
-	if err != nil {
-		misc.Logger.Error("parse userid err", zap.String("uid", uploadForm.Uid))
-		utils.FailWithMsg(c, "用户id解析出错")
-	}
-
 	//构造请求
 	req := &proto.UploadRequest{
-		Uid:     int32(uidInt32),
+		Uid:     uid,
 		Name:    uploadForm.Name,
 		Price:   uploadForm.Price,
 		School:  uploadForm.School,
@@ -174,16 +173,14 @@ func GetUserGoodsList(c *gin.Context) {
 	span := trace.SpanFromContext(c.Request.Context())
 	defer span.End()
 
-	var form UserGoodsListForm
-	var err error
-	if err = c.ShouldBindJSON(&form); err != nil {
-		misc.Logger.Error("handle get user goods bind json err", zap.String("err", err.Error()))
-		utils.FailWithMsg(c, "参数错误")
-		return
+	uid, err := utils.GetContextUserId(c)
+	if err != nil {
+		misc.Logger.Error("请求Token参数错误")
+		utils.FailWithMsg(c, err.Error())
 	}
 
 	req := &proto.GetUserGoodsListRequest{
-		Uid: form.Uid,
+		Uid: uid,
 	}
 
 	code, list, err := rpc.GetUserGoods(c.Request.Context(), req)
@@ -282,7 +279,14 @@ func DeleteGoods(c *gin.Context) {
 		return
 	}
 
+	uid, err := utils.GetContextUserId(c)
+	if err != nil {
+		misc.Logger.Error("请求Token参数错误")
+		utils.FailWithMsg(c, err.Error())
+	}
+
 	req := &proto.DeleteGoodsRequest{
+		Uid: uid,
 		Gid: form.Gid,
 	}
 

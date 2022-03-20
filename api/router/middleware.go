@@ -16,6 +16,7 @@ import (
 const (
 	TokenKey   = "X-TOKEN"
 	UserInfo   = "X-USER"
+	UserId     = "X-UID"
 	CountLimit = 20
 )
 
@@ -62,6 +63,7 @@ func UserAuthMiddleware() gin.HandlerFunc {
 			return
 		}
 		c.Set(UserInfo, user)
+		c.Set(UserId, user.GetId())
 		// redis增加计数
 		redisKey := fmt.Sprintf("%s-%s", token, uri)
 

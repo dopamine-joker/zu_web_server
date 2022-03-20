@@ -24,8 +24,14 @@ func AddComment(c *gin.Context) {
 		return
 	}
 
+	uid, err := utils.GetContextUserId(c)
+	if err != nil {
+		misc.Logger.Error("请求Token参数错误")
+		utils.FailWithMsg(c, err.Error())
+	}
+
 	req := &proto.AddCommentRequest{
-		Uid:     form.UId,
+		Uid:     uid,
 		Gid:     form.GId,
 		Oid:     form.OId,
 		Level:   form.Level,
@@ -40,7 +46,7 @@ func AddComment(c *gin.Context) {
 	}
 
 	span.SetAttributes(
-		attribute.Int64("userId", int64(form.UId)),
+		attribute.Int64("userId", int64(uid)),
 		attribute.Int64("goodsId", int64(form.GId)),
 		attribute.Int64("orderId", int64(form.OId)),
 		attribute.Int64("level", int64(form.Level)),
@@ -67,7 +73,14 @@ func DeleteComment(c *gin.Context) {
 		return
 	}
 
+	uid, err := utils.GetContextUserId(c)
+	if err != nil {
+		misc.Logger.Error("请求Token参数错误")
+		utils.FailWithMsg(c, err.Error())
+	}
+
 	req := &proto.DeleteCommentRequest{
+		Uid: uid,
 		Cid: form.CId,
 	}
 
@@ -90,16 +103,14 @@ func GetCommentByUserId(c *gin.Context) {
 	span := trace.SpanFromContext(c.Request.Context())
 	defer span.End()
 
-	var form GetCommentByUserIdForm
-	var err error
-	if err = c.ShouldBindJSON(&form); err != nil {
-		misc.Logger.Error("handle get user comment bind json err", zap.String("err", err.Error()))
-		utils.FailWithMsg(c, "参数错误")
-		return
+	uid, err := utils.GetContextUserId(c)
+	if err != nil {
+		misc.Logger.Error("请求Token参数错误")
+		utils.FailWithMsg(c, err.Error())
 	}
 
 	req := &proto.GetCommentByUserIdRequest{
-		Uid: form.UId,
+		Uid: uid,
 	}
 
 	code, protoList, err := rpc.GetCommentByUserId(c.Request.Context(), req)
@@ -132,7 +143,7 @@ func GetCommentByUserId(c *gin.Context) {
 	}
 
 	span.SetAttributes(
-		attribute.Int64("userId", int64(form.UId)),
+		attribute.Int64("userId", int64(uid)),
 		attribute.Int64("code", int64(code)),
 	)
 
