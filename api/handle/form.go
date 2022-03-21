@@ -29,8 +29,9 @@ type LogoutForm struct {
 }
 
 type GetSigForm struct {
-	SdkAppId int `form:"sdkAppId" json:"sdkAppId" binding:"required"`
-	Expire   int `form:"expire" json:"expire" binding:"required"`
+	UserId   string `form:"userId" json:"userId" binding:"required"`
+	SdkAppId int    `form:"sdkAppId" json:"sdkAppId" binding:"required"`
+	Expire   int    `form:"expire" json:"expire" binding:"required"`
 }
 
 type UploadForm struct {

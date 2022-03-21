@@ -48,6 +48,7 @@ func Upload(c *gin.Context) {
 	if err != nil {
 		misc.Logger.Error("请求Token参数错误")
 		utils.FailWithMsg(c, err.Error())
+		return
 	}
 
 	// 提取文件,转换为byte数组后保存
@@ -179,6 +180,7 @@ func GetUserGoodsList(c *gin.Context) {
 	if err != nil {
 		misc.Logger.Error("请求Token参数错误")
 		utils.FailWithMsg(c, err.Error())
+		return
 	}
 
 	req := &proto.GetUserGoodsListRequest{
@@ -287,6 +289,7 @@ func DeleteGoods(c *gin.Context) {
 	if err != nil {
 		misc.Logger.Error("请求Token参数错误")
 		utils.FailWithMsg(c, err.Error())
+		return
 	}
 
 	req := &proto.DeleteGoodsRequest{

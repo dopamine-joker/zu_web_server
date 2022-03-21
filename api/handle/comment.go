@@ -28,6 +28,7 @@ func AddComment(c *gin.Context) {
 	if err != nil {
 		misc.Logger.Error("请求Token参数错误")
 		utils.FailWithMsg(c, err.Error())
+		return
 	}
 
 	req := &proto.AddCommentRequest{
@@ -77,6 +78,7 @@ func DeleteComment(c *gin.Context) {
 	if err != nil {
 		misc.Logger.Error("请求Token参数错误")
 		utils.FailWithMsg(c, err.Error())
+		return
 	}
 
 	req := &proto.DeleteCommentRequest{
@@ -107,6 +109,7 @@ func GetCommentByUserId(c *gin.Context) {
 	if err != nil {
 		misc.Logger.Error("请求Token参数错误")
 		utils.FailWithMsg(c, err.Error())
+		return
 	}
 
 	req := &proto.GetCommentByUserIdRequest{

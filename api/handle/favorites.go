@@ -28,6 +28,7 @@ func AddFavorites(c *gin.Context) {
 	if err != nil {
 		misc.Logger.Error("请求Token参数错误")
 		utils.FailWithMsg(c, err.Error())
+		return
 	}
 
 	req := &proto.AddFavoritesRequest{
@@ -70,6 +71,7 @@ func DeleteFavorites(c *gin.Context) {
 	if err != nil {
 		misc.Logger.Error("请求Token参数错误")
 		utils.FailWithMsg(c, err.Error())
+		return
 	}
 
 	req := &proto.DeleteFavoritesRequest{
@@ -100,6 +102,7 @@ func GetUserFavorites(c *gin.Context) {
 	if err != nil {
 		misc.Logger.Error("请求Token参数错误")
 		utils.FailWithMsg(c, err.Error())
+		return
 	}
 
 	req := &proto.GetUserFavoritesRequest{

@@ -28,6 +28,7 @@ func AddOrder(c *gin.Context) {
 	if err != nil {
 		misc.Logger.Error("请求Token参数错误")
 		utils.FailWithMsg(c, err.Error())
+		return
 	}
 
 	req := &proto.AddOrderRequest{
@@ -64,6 +65,7 @@ func GetBuyOrder(c *gin.Context) {
 	if err != nil {
 		misc.Logger.Error("请求Token参数错误")
 		utils.FailWithMsg(c, err.Error())
+		return
 	}
 
 	req := &proto.GetBuyOrderRequest{
@@ -120,6 +122,7 @@ func GetSellOrder(c *gin.Context) {
 	if err != nil {
 		misc.Logger.Error("请求Token参数错误")
 		utils.FailWithMsg(c, err.Error())
+		return
 	}
 
 	req := &proto.GetSellOrderRequest{
@@ -184,6 +187,7 @@ func UpdateOrder(c *gin.Context) {
 	if err != nil {
 		misc.Logger.Error("请求Token参数错误")
 		utils.FailWithMsg(c, err.Error())
+		return
 	}
 
 	req := &proto.UpdateOrderRequest{

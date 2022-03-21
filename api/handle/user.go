@@ -10,7 +10,6 @@ import (
 	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/zap"
 	"log"
-	"strconv"
 )
 
 func Login(c *gin.Context) {
@@ -110,6 +109,7 @@ func UpdateUser(c *gin.Context) {
 	if err != nil {
 		misc.Logger.Error("请求Token参数错误")
 		utils.FailWithMsg(c, err.Error())
+		return
 	}
 
 	req := &proto.UpdateUserRequest{
@@ -230,13 +230,13 @@ func GetSig(c *gin.Context) {
 		return
 	}
 
-	uid, err := utils.GetContextUserId(c)
-	if err != nil {
-		misc.Logger.Error("请求Token参数错误")
-		utils.FailWithMsg(c, err.Error())
-	}
+	//uid, err := utils.GetContextUserId(c)
+	//if err != nil {
+	//	misc.Logger.Error("请求Token参数错误")
+	//	utils.FailWithMsg(c, err.Error())
+	//}
 
-	code, sig, err := rpc.GetSig(c.Request.Context(), strconv.FormatInt(int64(uid), 10), getSigForm.SdkAppId, getSigForm.Expire)
+	code, sig, err := rpc.GetSig(c.Request.Context(), getSigForm.UserId, getSigForm.SdkAppId, getSigForm.Expire)
 	if code == misc.CodeFail || err != nil {
 		misc.Logger.Error("rpc getSIg err", zap.Error(err))
 		utils.FailWithMsg(c, "获取签名失败")
@@ -275,6 +275,7 @@ func UpdateFace(c *gin.Context) {
 	if err != nil {
 		misc.Logger.Error("请求Token参数错误")
 		utils.FailWithMsg(c, err.Error())
+		return
 	}
 
 	dataMap := make(map[string]interface{})
