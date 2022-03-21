@@ -36,6 +36,7 @@ type GetSigForm struct {
 type UploadForm struct {
 	Name   string `form:"name" json:"token" binding:"required"`
 	Price  string `form:"price" json:"price" binding:"required"`
+	Type   int32  `form:"type" json:"type" binding:"required"`
 	School string `form:"school" json:"school" binding:"required"`
 	Detail string `form:"detail" json:"detail" binding:"required"`
 }

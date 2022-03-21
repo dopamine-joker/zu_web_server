@@ -2,7 +2,6 @@ package utils
 
 import (
 	"errors"
-	"github.com/dopamine-joker/zu_web_server/api/router"
 	"net/http"
 	"strings"
 
@@ -10,6 +9,10 @@ import (
 	"google.golang.org/grpc/resolver"
 
 	"github.com/dopamine-joker/zu_web_server/misc"
+)
+
+const (
+	UserId = "X-UID"
 )
 
 func SuccessWithMsg(c *gin.Context, msg interface{}, data interface{}) {
@@ -36,7 +39,7 @@ func ResponseWithCode(c *gin.Context, msgCode int, msg interface{}, data interfa
 }
 
 func GetContextUserId(c *gin.Context) (uid int32, err error) {
-	val, exists := c.Get(router.UserId)
+	val, exists := c.Get(UserId)
 	if !exists {
 		misc.Logger.Error("Token无法识别用户id")
 		return -1, errors.New("用户未登陆")

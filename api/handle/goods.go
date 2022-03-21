@@ -105,6 +105,7 @@ func Upload(c *gin.Context) {
 		Uid:     uid,
 		Name:    uploadForm.Name,
 		Price:   uploadForm.Price,
+		Type:    uploadForm.Type,
 		School:  uploadForm.School,
 		Detail:  uploadForm.Detail,
 		Cover:   coverPic,
@@ -155,6 +156,7 @@ func GetGoods(c *gin.Context) {
 		m["name"] = goods.Name
 		m["uname"] = goods.Uname
 		m["price"] = goods.Price
+		m["type"] = goods.Type
 		m["cover"] = goods.Cover
 		m["school"] = goods.School
 		dataMap = append(dataMap, m)
@@ -199,6 +201,7 @@ func GetUserGoodsList(c *gin.Context) {
 			"name":        g.Name,
 			"uname":       g.Uname,
 			"price":       g.Price,
+			"type":        g.Type,
 			"school":      g.School,
 			"detail":      g.Detail,
 			"cover":       g.Cover,
@@ -253,6 +256,7 @@ func GetGoodsDetail(c *gin.Context) {
 		"name":        goodsDetail.Name,
 		"uname":       goodsDetail.Uname,
 		"price":       goodsDetail.Price,
+		"type":        goodsDetail.Type,
 		"school":      goodsDetail.School,
 		"detail":      goodsDetail.Detail,
 		"cover":       goodsDetail.Cover,
@@ -342,6 +346,7 @@ func SearchGoods(c *gin.Context) {
 			"name":        goods.Name,
 			"uname":       goods.Uname,
 			"price":       goods.Price,
+			"type":        goods.Type,
 			"school":      goods.School,
 			"detail":      goods.Detail,
 			"cover":       goods.Cover,
