@@ -125,6 +125,7 @@ func GetUserFavorites(c *gin.Context) {
 			"gid":   favorites.Gid,
 			"gname": favorites.Name,
 			"price": favorites.Price,
+			"type":  favorites.Type,
 			"cover": favorites.Cover,
 		})
 	}
